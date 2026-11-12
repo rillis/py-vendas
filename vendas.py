@@ -224,7 +224,14 @@ def buscar_estoque():
     import pymysql
 
     env = ler_env()
+    tls = {}
+    if env.get('DB_SSL_CA'):
+        # TLS obrigatório, validando o certificado do servidor pela CA do .env.
+        # O certificado auto-gerado do MySQL não tem o hostname, então só a CA é conferida.
+        tls = dict(ssl_ca=os.path.join(PASTA, env['DB_SSL_CA']),
+                   ssl_verify_cert=True, ssl_verify_identity=False)
     conexao = pymysql.connect(
+        **tls,
         host=env.get('DB_HOST', ''),
         port=int(env.get('DB_PORT') or 3306),
         user=env.get('DB_USER', ''),

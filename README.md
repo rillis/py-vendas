@@ -37,6 +37,7 @@ Preencha o `.env` com a conexão do MySQL do estoque:
 | `DB_USER` | Usuário |
 | `DB_PASS` | Senha |
 | `DB_NAME` | Banco onde está a tabela `estoque` (colunas `sku`, `qtd`) |
+| `DB_SSL_CA` | Arquivo `.pem` da CA do MySQL, na pasta do projeto (conexão TLS) |
 
 Sem o `.env`, ou sem acesso ao banco, a mensagem é gerada e copiada normalmente; só o cruzamento com o estoque mostra um aviso.
 
