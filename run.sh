@@ -3,16 +3,19 @@
 
 cd "$(dirname "$0")" || exit 1
 
-if [ ! -f venv/bin/activate ]; then
-    echo "venv nao encontrado. Crie com:"
-    echo "  python3 -m venv venv && venv/bin/pip install -r requirements.txt"
+if ! command -v wl-copy >/dev/null && ! command -v xclip >/dev/null && ! command -v xsel >/dev/null; then
+    echo "Erro: nenhum utilitario de area de transferencia encontrado."
+    echo "Instale wl-clipboard (Wayland) ou xclip/xsel (X11) para o pyperclip funcionar."
     exit 1
 fi
 
-if ! command -v wl-copy >/dev/null && ! command -v xclip >/dev/null && ! command -v xsel >/dev/null; then
-    echo "Aviso: nenhum utilitario de area de transferencia encontrado."
-    echo "Instale wl-clipboard (Wayland) ou xclip/xsel (X11) para o pyperclip funcionar."
-    echo
+if [ ! -f venv/bin/activate ]; then
+    echo "Criando venv e instalando dependencias..."
+    if ! python3 -m venv venv || ! venv/bin/pip install -r requirements.txt; then
+        echo "Erro: falha ao criar o venv."
+        rm -rf venv
+        exit 1
+    fi
 fi
 
 # shellcheck disable=SC1091
@@ -24,5 +27,5 @@ while true; do
     echo
     python vendas.py
     echo
-    read -rp "Pressione Enter para continuar . . . "
+    read -rp "Pressione Enter para continuar . . . " || exit 0
 done

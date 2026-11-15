@@ -22,23 +22,9 @@ Transforma a lista de etiquetas do Mercado Livre (copiada da página de impress�
 
 Requer Python 3.10+.
 
-Windows:
+Copie o `.env.example` para `.env` (`copy` no Windows, `cp` no Linux). O `venv` é criado automaticamente na primeira execução do `run.bat`/`run.sh`, já com as dependências do `requirements.txt`.
 
-```bash
-python -m venv venv
-venv\Scripts\pip install -r requirements.txt
-copy .env.example .env
-```
-
-Linux:
-
-```bash
-python3 -m venv venv
-venv/bin/pip install -r requirements.txt
-cp .env.example .env
-```
-
-No Linux, o `pyperclip` precisa de um utilitário de área de transferência: `wl-clipboard` (Wayland) ou `xclip`/`xsel` (X11).
+No Linux, o `pyperclip` precisa de um utilitário de área de transferência: `wl-clipboard` (Wayland) ou `xclip`/`xsel` (X11). Sem ele, o `run.sh` não inicia.
 
 Preencha o `.env` com a conexão do MySQL do estoque:
 
@@ -55,7 +41,7 @@ Sem o `.env`, ou sem acesso ao banco, a mensagem é gerada e copiada normalmente
 
 ## Como usar
 
-Rode `run.bat` (Windows) ou `./run.sh` (Linux). Ele ativa o `venv`, executa `vendas.py` e, depois de cada lista, espera um Enter para aguardar a próxima.
+Rode `run.bat` (Windows) ou `./run.sh` (Linux). Ele cria o `venv` se ainda não existir, ativa, executa `vendas.py` e, depois de cada lista, espera um Enter para aguardar a próxima.
 
 1. Na página de etiquetas do Mercado Livre, selecione tudo (Ctrl+A) e copie (Ctrl+C).
 2. O script detecta a lista, imprime a mensagem e copia para a área de transferência.
