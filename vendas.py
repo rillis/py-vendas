@@ -37,7 +37,11 @@ RE_FIM = re.compile(r'Despachem\b|\Z', re.IGNORECASE)
 # Linha que identifica uma etiqueta. Já foi "Venda:" (com ou sem "Pack ID:"), hoje é "Envio:".
 RE_CABECALHO = re.compile(r'^(?:Venda|Envio|Pack\s*ID)\s*:', re.IGNORECASE)
 # Código da etiqueta que vem antes do cabeçalho (ex.: ABCDEFGHIJKLMNOPQRSTUVWXYZ).
-RE_CODIGO = re.compile(r'^[A-Z0-9]{20,32}$')
+# Copiando no Linux o título do produto vem grudado no código, então basta o começo da linha.
+RE_CODIGO = re.compile(r'^[A-Z0-9]{20,32}(?:$|(?=[A-Z][a-z]))')
+# Copiando no Linux "SKU:" e "Quantidade:" vêm grudados na linha anterior
+# ("Envio: 123SKU: XYZ", "FulanoQuantidade: 1"); separa em linhas próprias.
+RE_QUEBRA = re.compile(r'(?<=[^\n])[ \t]*(?=(?:SKU|Quantidade):)')
 RE_SKU = re.compile(r'^(.*?)\s*SKU:\s*(.+)$')
 RE_QTD = re.compile(r'^Quantidade:\s*(\d+)')
 RE_KIT = re.compile(r'^(\d+)\s*x\s*(.+)$', re.IGNORECASE)
@@ -108,7 +112,7 @@ def ler_etiquetas(tabela):
         atual = {'nome': None, 'itens': []}
         etiquetas.append(atual)
 
-    for linha in tabela.splitlines():
+    for linha in RE_QUEBRA.sub('\n', tabela).splitlines():
         linha = linha.strip()
         if not linha:
             continue
@@ -137,7 +141,8 @@ def ler_etiquetas(tabela):
             continue
 
         # Primeira linha "solta" é o nome; o resto (Voltagem, Cor...) é ignorado.
-        if not atual['nome'] and not atual['itens']:
+        # O nome pode vir antes do SKU ou entre o SKU e a "Quantidade:" (cópia no Linux).
+        if not atual['nome'] and (not atual['itens'] or atual['itens'][-1][1] is None):
             atual['nome'] = linha
 
     return [e for e in etiquetas if e['nome'] or e['itens']]
