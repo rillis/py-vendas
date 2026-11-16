@@ -311,7 +311,7 @@ def mostrar_estoque(vendidos):
         return
     for rotulo, lista in (('[MESMO SKU]', exatos), ('[PARECIDO] ', parecidos)):
         for nome, vendido, levando, no_estoque, total in lista:
-            print(f'  {rotulo} {vendido} ({nome}, leva {levando} un.) -> tem {total} un. de {no_estoque}')
+            print(f'  {rotulo} - {levando}x {vendido} ({nome}) -> tem {total}x {no_estoque}')
 
 
 # ---------------------------------------------------------------------------
