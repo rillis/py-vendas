@@ -309,9 +309,14 @@ def mostrar_estoque(vendidos):
     if not exatos and not parecidos:
         print('  Nenhum item das vendas está no estoque de devoluções.')
         return
-    for rotulo, lista in (('[MESMO SKU]', exatos), ('[PARECIDO] ', parecidos)):
+    blocos = [(rotulo, lista) for rotulo, lista in
+              (('[MESMO SKU]', exatos), ('[PARECIDO]', parecidos)) if lista]
+    for i, (rotulo, lista) in enumerate(blocos):
+        if i:
+            print()
+        print(rotulo)
         for nome, vendido, levando, no_estoque, total in lista:
-            print(f'  {rotulo} - {levando}x {vendido} ({nome}) -> tem {total}x {no_estoque}')
+            print(f'- {levando}x {vendido} ({nome}) -> tem {total}x {no_estoque}')
 
 
 # ---------------------------------------------------------------------------
