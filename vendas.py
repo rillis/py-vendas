@@ -36,9 +36,10 @@ RE_INICIO = re.compile(r'Identifi+ca[cç][aã]o\s+Produtos', re.IGNORECASE)
 RE_FIM = re.compile(r'Despachem\b|\Z', re.IGNORECASE)
 # Linha que identifica uma etiqueta. Já foi "Venda:" (com ou sem "Pack ID:"), hoje é "Envio:".
 RE_CABECALHO = re.compile(r'^(?:Venda|Envio|Pack\s*ID)\s*:', re.IGNORECASE)
-# Código da etiqueta que vem antes do cabeçalho (ex.: ABCDEFGHIJKLMNOPQRSTUVWXYZ).
+# Código da etiqueta que vem antes do cabeçalho: 26 letras/números no Mercado Envios
+# (ex.: ABCDEFGHIJKLMNOPQRSTUVWXYZ) ou 15 dígitos em outras transportadoras (ex.: 888002880894279).
 # Copiando no Linux o título do produto vem grudado no código, então basta o começo da linha.
-RE_CODIGO = re.compile(r'^[A-Z0-9]{20,32}(?:$|(?=[A-Z][a-z]))')
+RE_CODIGO = re.compile(r'^(?:[A-Z0-9]{20,32}|\d{15})(?:$|(?=[A-Z][a-z]))')
 # Copiando no Linux "SKU:" e "Quantidade:" vêm grudados na linha anterior
 # ("Envio: 123SKU: XYZ", "FulanoQuantidade: 1"); separa em linhas próprias.
 RE_QUEBRA = re.compile(r'(?<=[^\n])[ \t]*(?=(?:SKU|Quantidade):)')
